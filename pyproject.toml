@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "dupehunter"
+version = "0.1.0"
+description = "A Python package for detecting and managing duplicate image files."
+authors = ["Fredrik Rundgren <fredrik@leipt.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/frecke/dupehunter"
+keywords = ["duplicate", "image", "checksum", "deduplication"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pillow = "^9.0"
+aiofiles = "^22.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0"
+pytest-cov = "^4.0"
+black = "^23.0"
+flake8 = "^6.0"
+mypy = "^1.0"
+isort = "^5.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
