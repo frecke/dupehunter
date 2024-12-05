@@ -19,7 +19,7 @@ pytest-cov = "^6.0.0"
 black = "^23.0"
 flake8 = "^6.0"
 mypy = "^1.0"
-isort = "^5.0"
+isort = "^5.13.2"
 pre-commit = "^4.0.1"
 pytest-mock = "^3.14.0"
 pytest-xdist = "^3.6.1"
@@ -41,3 +41,6 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.isort]
+profile = "black"
