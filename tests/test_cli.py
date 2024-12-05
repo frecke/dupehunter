@@ -1,11 +1,10 @@
 import argparse
-import logging
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
-from dupehunter.cli import cli_entry_point, configure_logging, parse_arguments
+from dupehunter.cli import cli_entry_point, parse_arguments
 
 
 @pytest.fixture
@@ -56,17 +55,6 @@ def test_parse_arguments_invalid_log_level():
     ):
         with pytest.raises(SystemExit):
             parse_arguments()
-
-
-@pytest.mark.parametrize("log_level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
-def test_configure_logging_valid_levels(log_level):
-    """Parameterized test: Configure logging with valid levels."""
-    with patch("logging.basicConfig") as mock_logging:
-        configure_logging(log_level)
-        mock_logging.assert_called_once_with(
-            level=getattr(logging, log_level.upper()),
-            format="%(asctime)s - %(levelname)s - %(message)s",
-        )
 
 
 @patch("dupehunter.cli.main")
