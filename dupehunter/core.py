@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import logging
 from pathlib import Path
@@ -63,8 +64,6 @@ async def main(base_path: Path, target_path: Path, db_path: Path = DEFAULT_DB_PA
 
 
 if __name__ == "__main__":
-    import argparse
-
     parser = argparse.ArgumentParser(description="DupeHunter: Deduplicate Image Files")
     parser.add_argument("--base-path", required=True, help="Path to scan for images")
     parser.add_argument(
