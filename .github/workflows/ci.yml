@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      # Install Poetry
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::${HOME}/.local/bin"
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      # Run code style checks
+      - name: Run Black
+        run: poetry run black --check .
+
+      - name: Run Flake8
+        run: poetry run flake8 .
+
+      - name: Run isort
+        run: poetry run isort --check .
+
+      - name: Run MyPy
+        run: poetry run mypy .
+
+      # Run tests
+      - name: Run tests
+        run: |
+          poetry run pytest --cov=dupehunter --cov-report=xml
+
+      # Upload coverage to Codecov (optional)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
