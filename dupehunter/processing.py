@@ -3,9 +3,12 @@ import logging
 import os
 import sqlite3
 from pathlib import Path
+from typing import List
 
 from dupehunter.constants import SUPPORTED_EXTENSIONS
 from dupehunter.files import calculate_checksum, extract_metadata
+
+logger = logging.getLogger(__name__)
 
 
 async def process_file(file_path: Path, db_path: Path) -> None:
@@ -38,12 +41,20 @@ async def process_file(file_path: Path, db_path: Path) -> None:
 
 
 # Directory Traversal
+async def process_folder(root: str, files: List[str], db_path: Path) -> None:
+    """Process all files in a folder asynchronously."""
+    logger.debug(f"Scanning folder: {root}")
+    tasks = []
+    for file in files:
+        if Path(file).suffix.lower() in SUPPORTED_EXTENSIONS:
+            file_path = Path(root) / file
+            tasks.append(process_file(file_path.resolve(), db_path))
+    await asyncio.gather(*tasks)
+
+
 async def traverse_directory(base_path: Path, db_path: Path) -> None:
     """Recursively traverse the directory and process image files."""
     tasks = []
     for root, _, files in os.walk(base_path):
-        for file in files:
-            if Path(file).suffix.lower() in SUPPORTED_EXTENSIONS:
-                file_path = Path(root) / file
-                tasks.append(process_file(file_path.resolve(), db_path))
+        tasks.append(process_folder(root, files, db_path))
     await asyncio.gather(*tasks)
